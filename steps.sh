@@ -12,7 +12,6 @@ set -o allexport; source .env; set +o allexport
 # Clone repo
 git clone https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo.git && cd shiftleft-csharp-demo/netcoreWebapi
 
-
 ### sonarQube ###
 
 # Configure the tool
@@ -47,6 +46,7 @@ mvn clean package
 
 sonar-scanner \
   -Dsonar.projectKey=shiftleft-java-demo \
+  -Dsonar.filesize.limit=100 \
   -Dsonar.sources=. \
   -Dsonar.host.url=http://localhost:9000 \
   -Dsonar.login=$JAVA_SONARQUBE_TOKEN
@@ -60,12 +60,12 @@ sonar-scanner \
 cd ..
 
 ### snyk ###
-snyk auth
+export SNYK_TOKEN=$SNYK_TOKEN
 snyk code test
 
 ### sast-scan tool ###
 export SHIFTLEFT_ACCESS_TOKEN=$SL_TOKEN
-sl analyze --app shiftleft-csharp-demo --java --wait target/hello-shiftleft-0.0.1.jar
+sl analyze --app shiftleft-java-demo --java --wait target/hello-shiftleft-0.0.1.jar
 
 cd ..
 
@@ -83,13 +83,14 @@ sonar-scanner \
   -Dsonar.login=$PYTHON_SONARQUBE_TOKEN
 
 ### snyk ###
-snyk auth
+export SNYK_TOKEN=$SNYK_TOKEN
 snyk code test
 
 ### sast-scan tool ###
 export SHIFTLEFT_ACCESS_TOKEN=$SL_TOKEN
 sl analyze --app shiftleft-python-demo --python --wait
 
+cd ..
 #####################################################################################################
 ############################################# Go Code ###############################################
 #####################################################################################################
