@@ -1,0 +1,59 @@
+# Sonarqube Community Edition running on Docker
+# https://hub.docker.com/_/sonarqube/
+# https://docs.sonarqube.org/latest/setup/get-started-2-minutes/
+version: '3.8'
+
+services:
+  app:
+    container_name: dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image: mcr.microsoft.com/devcontainers/dotnet:0-7.0
+    volumes:
+      - ../..:/workspaces:cached
+     # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+     # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:sonarqube
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+  sonarqube:
+    image: sonarqube:lts-community
+    ports:
+      - "9000:9000"
+    networks:
+      - sonarnet
+    environment:
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+      - SONARQUBE_JDBC_USERNAME=sonar
+      - SONARQUBE_JDBC_PASSWORD=sonar
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+      
+  db:
+    image: postgres
+    networks:
+      - sonarnet
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+    volumes:
+      - postgresql:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
+      
+networks:
+  sonarnet:
+    driver: bridge
+ 
+volumes:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_bundled-plugins:
+  postgresql:
+  postgresql_data:

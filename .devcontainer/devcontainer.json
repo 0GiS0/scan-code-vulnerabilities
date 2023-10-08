@@ -1,0 +1,58 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/alpine
+{
+	"name": "Testing SAST tools for .NET",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/dotnet:2": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/java:1": {
+
+		},
+		
+		"ghcr.io/devcontainers-contrib/features/maven-sdkman:2": {},
+		"ghcr.io/devcontainers-contrib/features/snyk-cli:1": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": true,
+			"azureDnsAutoDetection": true,
+			"installDockerBuildx": true,
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers-contrib/features/node-asdf:0": {
+			"version": "latest"
+		}
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [
+		9000
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"dotenv.dotenv-vscode",
+				"GitHub.copilot",
+				"vscjava.vscode-gradle",
+				"golang.Go",
+				"ms-dotnettools.csdevkit",
+				"shakram02.bash-beautify"
+			]
+		}
+	},
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "dotnet tool install --global dotnet-sonarscanner && npm install snyk-to-html -g",
+	// Configure tool-specific properties.
+	// "customizations": {},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+	"hostRequirements": {
+		"cpus": 8,
+		"memory": "8gb"
+	}
+}

@@ -1,0 +1,9 @@
+.env
+.sonarqube
+.scannerwork
+
+# demo projects
+shifleft-go-example
+shiftleft-csharp-demo/
+shiftleft-java-demo
+shiftleft-python-demo
