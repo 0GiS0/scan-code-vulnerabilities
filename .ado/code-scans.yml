@@ -25,6 +25,7 @@ jobs:
   - template: "/.ado/templates/scan-dotnet-code.yml"
     parameters:    
       SNYK_TOKEN: $(SNYK_TOKEN)
+      SL_TOKEN: $(SL_TOKEN)
       repo: 'https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo'
       working_directory: 'shiftleft-csharp-demo/netcoreWebapi'
       app-name: 'shiftleft-csharp-demo'
