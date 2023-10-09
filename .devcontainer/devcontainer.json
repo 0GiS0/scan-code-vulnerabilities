@@ -8,26 +8,14 @@
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
-		"ghcr.io/devcontainers/features/dotnet:2": {
-			"version": "latest"
-		},
-		"ghcr.io/devcontainers/features/java:1": {
-
-		},
+		"ghcr.io/devcontainers/features/dotnet:2": {},
+		"ghcr.io/devcontainers/features/java:1": {},
 		
 		"ghcr.io/devcontainers-contrib/features/maven-sdkman:2": {},
-		"ghcr.io/devcontainers-contrib/features/snyk-cli:1": {
-			"version": "latest"
-		},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {
-			"moby": true,
-			"azureDnsAutoDetection": true,
-			"installDockerBuildx": true,
-			"version": "latest"
-		},
-		"ghcr.io/devcontainers-contrib/features/node-asdf:0": {
-			"version": "latest"
-		}
+		"ghcr.io/devcontainers-contrib/features/snyk-cli:1": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/devcontainers-contrib/features/node-asdf:0": {},
+		"ghcr.io/devcontainers/features/go:1": {}
 	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [
