@@ -1,0 +1,36 @@
+name: Code scans
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+      - .github/**
+      - README.md
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+      - .github/**
+      - README.md
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+  - template: "/.ado/templates/scan-dotnet-code.yml"
+    parameters:    
+      SNYK_TOKEN: $(SNYK_TOKEN)
+      repo: 'https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo'
+      working_directory: 'shiftleft-csharp-demo/netcoreWebapi'
+      app-name: 'shiftleft-csharp-demo'
+      csproj: 'netcoreWebapi.csproj'
+      
+
+
+
+  

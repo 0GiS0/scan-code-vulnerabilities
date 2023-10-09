@@ -1,0 +1,70 @@
+parameters:
+  - name: SNYK_TOKEN # name of the parameter; required
+    type: string # data type of the parameter; required
+  - name: working_directory
+    type: string
+    required: true
+  - name: repo
+    type: string
+    required: true
+  - name: path
+    type: string
+    required: false
+    default: manifests
+  - name: app-name
+    type: string
+    required: true
+  - name: csproj
+    type: string
+    required: false    
+
+jobs:
+  # - job: SonarQube
+
+  - job: Snyk
+    steps:
+      - task: CmdLine@2
+        displayName: "Checkout a public GH repo"
+        inputs:
+          script: |
+            git clone ${{ parameters.repo }}
+      - task: CmdLine@2
+        displayName: "Install Snyc CLI"
+        inputs:
+          script: |
+            curl --compressed https://static.snyk.io/cli/latest/snyk-linux -o snyk
+            chmod +x ./snyk
+            mv ./snyk /usr/local/bin/
+      - task: CmdLine@2
+        displayName: "Scan .NET code"
+        inputs:
+          script: |
+            cd ${{ parameters.working_directory }}
+            dotnet build
+            snyk code test --sarif || true
+            snyk code test --sarif > $(Build.ArtifactStagingDirectory)/snyk-code.sarif || true
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.ArtifactStagingDirectory)/snyk-code.sarif"
+          ArtifactName: "CodeAnalysisLogs"
+          publishLocation: "Container"
+  
+  - job: SASTScan
+    steps:
+      - task: CmdLine@2
+        displayName: "Checkout a public GH repo"
+        inputs:
+          script: |
+            git clone ${{ parameters.repo }}
+      - task: CmdLine@2
+        displayName: "Install sast-scan CLI"
+        inputs:
+          script: |
+            curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
+      - task: CmdLine@2
+        displayName: "Scan .NET code"
+        inputs:
+          script: |
+            cd ${{ inputs.working-directory }}
+            dotnet build
+            sl analyze --app ${{ inputs.app-name }} --csharp --wait ${{ inputs.csproj }}
