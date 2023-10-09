@@ -43,15 +43,15 @@ jobs:
         displayName: "Build and analyze"
         inputs:
           script: |
-             cd ${{ parameters.working_directory }}      
-          mvn clean package
-          sonar-scanner \
-          -Dsonar.projectKey=${{ parameters.app_name }} \
-          -Dsonar.filesize.limit=100 \
-          -Dsonar.java.binaries=target/classes \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=${{ secrets.SONARQUBE_URL }} \
-          -Dsonar.login=${{ secrets.JAVA_SONARQUBE_TOKEN }}
+            cd ${{ parameters.working_directory }}      
+            mvn clean package
+            sonar-scanner \
+            -Dsonar.projectKey=${{ parameters.app_name }} \
+            -Dsonar.filesize.limit=100 \
+            -Dsonar.java.binaries=target/classes \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=${{ secrets.SONARQUBE_URL }} \
+            -Dsonar.login=${{ secrets.JAVA_SONARQUBE_TOKEN }}
 
   - job: Snyk
     steps:
