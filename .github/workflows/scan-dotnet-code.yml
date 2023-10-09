@@ -52,6 +52,6 @@ jobs:
         shell: powershell
         run: |
           cd shiftleft-csharp-demo/netcoreWebapi
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"example" /d:sonar.login="sqp_2a7a384d278326a52344f987ab87e51c70febc66" /d:sonar.host.url="https://zany-fishstick-p74pp9q55frwr9-9000.app.github.dev/"          
+          ..\.sonar\scanner\dotnet-sonarscanner begin /k:"example" /d:sonar.login="sqp_2a7a384d278326a52344f987ab87e51c70febc66" /d:sonar.host.url="https://zany-fishstick-p74pp9q55frwr9-9000.app.github.dev/"          
           dotnet build
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="sqp_2a7a384d278326a52344f987ab87e51c70febc66"
+          ..\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="sqp_2a7a384d278326a52344f987ab87e51c70febc66"
