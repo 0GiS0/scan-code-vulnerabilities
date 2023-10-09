@@ -56,7 +56,7 @@ jobs:
       app_name: 'shiftleft-go-example'
   - template: "/.ado/templates/scan-python-code.yml"
     parameters:
-      GO_SONARQUBE_TOKEN: $(PYTHON_SONARQUBE_TOKEN)
+      PYTHON_SONARQUBE_TOKEN: $(PYTHON_SONARQUBE_TOKEN)
       SONARQUBE_URL: $(SONARQUBE_CODESPACES_URL)
       SNYK_TOKEN: $(SNYK_TOKEN)
       SL_TOKEN: $(SL_TOKEN)
