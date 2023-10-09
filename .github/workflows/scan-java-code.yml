@@ -28,7 +28,8 @@ jobs:
           repository: 'ShiftLeftSecurity/shiftleft-java-demo'
           path: 'shiftleft-java-demo'      
       - name: Install SonarQube scanner        
-        run: |          
+        run: |
+            SONAR_DIR=/opt/sonarscanner          
             mkdir -p $SONAR_DIR && cd $SONAR_DIR
             wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
             unzip sonar-scanner-cli-5.0.1.3006-linux.zip 
