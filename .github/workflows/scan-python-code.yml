@@ -1,4 +1,4 @@
-name: Scan Java Code
+name: Scan Python Code
 
 on:
   push:
@@ -25,8 +25,8 @@ jobs:
         with:
         # Repository name with owner. For example, actions/checkout
         # Default: ${{ github.repository }}
-          repository: 'ShiftLeftSecurity/shiftleft-java-demo'
-          path: 'shiftleft-java-demo'      
+          repository: 'ShiftLeftSecurity/shiftleft-python-demo'
+          path: 'shiftleft-python-demo'      
       - name: Install SonarQube scanner        
         run: |
             SONAR_DIR=/opt/sonarscanner          
@@ -40,15 +40,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any        
         run: |
-          cd shiftleft-java-demo          
+          cd shiftleft-python-demo          
           mvn clean package
           sonar-scanner \
-          -Dsonar.projectKey=shiftleft-java-demo \
-          -Dsonar.filesize.limit=100 \
-          -Dsonar.java.binaries=target/classes \
+          -Dsonar.projectKey=shiftleft-python-demo \
           -Dsonar.sources=. \
           -Dsonar.host.url=${{ secrets.SONARQUBE_CODESPACES_URL }} \
-          -Dsonar.login=${{ secrets.JAVA_SONARQUBE_TOKEN }}
+          -Dsonar.login=${{ secrets.PYTHON_SONARQUBE_TOKEN }}
           
   snyk:
     name: Snyk
@@ -63,16 +61,15 @@ jobs:
         with:
         # Repository name with owner. For example, actions/checkout
         # Default: ${{ github.repository }}
-          repository: 'ShiftLeftSecurity/shiftleft-java-demo'
-          path: 'shiftleft-java-demo'
+          repository: 'ShiftLeftSecurity/shiftleft-python-demo'
+          path: 'shiftleft-python-demo'
       - name: Set up Snyk CLI to check for security issues
         uses: snyk/actions/setup@806182742461562b67788a64410098c9d9b96adb
               
       - name: Snyk Code test and report
         continue-on-error: true       
         run: |
-            cd shiftleft-java-demo
-            mvn clean package
+            cd shiftleft-python-demo            
             snyk code test --sarif || true
             snyk code test --sarif  > snyk-code.sarif
 
@@ -81,7 +78,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         if: success() || failure()
         with:
-          sarif_file: shiftleft-java-demo/snyk-code.sarif  
+          sarif_file: shiftleft-python-demo/snyk-code.sarif  
 
   sast-scan:
     name: Sast-scan
@@ -94,16 +91,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:        
-          repository: 'ShiftLeftSecurity/shiftleft-java-demo'
-          path: 'shiftleft-java-demo'
+          repository: 'ShiftLeftSecurity/shiftleft-python-demo'
+          path: 'shiftleft-python-demo'
       - name: Install sast-scan
         run: |
           curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
       - name: Perform Scan
         run: |
-          cd shiftleft-java-demo
-          mvn clean package
-          sl analyze --app shiftleft-java-demo --java --wait netcoreWebapi.csproj
+          cd shiftleft-python-demo          
+          sl analyze --app shiftleft-python-demo --python --wait netcoreWebapi.csproj
         env:
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
       - name: Get SARIF
