@@ -1,4 +1,8 @@
 parameters:
+  - name: DOTNET_SONARQUBE_TOKEN # name of the parameter; required
+    type: string # data type of the parameter; required
+  - name: SONARQUBE_URL # name of the parameter; required
+    type: string # data type of the parameter; required
   - name: SNYK_TOKEN # name of the parameter; required
     type: string # data type of the parameter; required
   - name: SL_TOKEN # name of the parameter; required
@@ -15,7 +19,28 @@ parameters:
     type: string    
 
 jobs:
-  # - job: SonarQube
+  - job: SonarQube
+    steps:
+      - task: CmdLine@2
+        displayName: "Checkout a public GH repo"
+        inputs:
+          script: |
+            git clone https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo && cd shiftleft-csharp-demo/netcoreWebapi                       
+
+      - task: CmdLine@2
+        displayName: "Install SonarQube scanner" 
+        inputs:
+          script: |          
+            dotnet tool install --global dotnet-sonarscanner
+
+      - task: CmdLine@2
+        displayName: "Build and analyze"
+        inputs:
+          script: |
+            cd ${{ parameters.working-directory }}
+            dotnet sonarscanner begin /k:"${{ parameters.app_name }}" /d:sonar.host.url="${{ parameters.SONARQUBE_URL }}" /d:sonar.login="${{ parameters.DOTNET_SONARQUBE_TOKEN }}"     
+            dotnet build
+            dotnet sonarscanner end /d:sonar.login="${{ parameters.DOTNET_SONARQUBE_TOKEN }}"
 
   - job: Snyk
     steps:
