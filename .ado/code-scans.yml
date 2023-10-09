@@ -8,6 +8,8 @@ trigger:
     exclude:
       - .github/**
       - README.md
+      - steps.sh
+      - .gitignore
 
 pr:
   branches:
