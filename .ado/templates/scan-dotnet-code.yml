@@ -9,7 +9,7 @@ parameters:
     type: string    
   - name: path
     type: string
-  - name: app-name
+  - name: app_name
     type: string    
   - name: csproj
     type: string    
@@ -63,6 +63,6 @@ jobs:
         displayName: "Scan .NET code"
         inputs:
           script: |
-            cd ${{ inputs.working-directory }}
+            cd ${{ parameters.working_directory }}
             dotnet build
-            sl analyze --app ${{ inputs.app-name }} --csharp --wait ${{ inputs.csproj }}
+            sl analyze --app ${{ parameters.app_name }} --csharp --wait ${{ parameters.csproj }}
