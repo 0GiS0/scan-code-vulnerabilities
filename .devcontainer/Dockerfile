@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/devcontainers/dotnet:0-7.0
 
 ARG SONAR_DIR=/opt/sonarscanner
 
-# Install SonarScanner CLI and Snyk to HTML tool
+# Install SonarScanner CLI
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
     unzip \
