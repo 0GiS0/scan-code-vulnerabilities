@@ -25,7 +25,7 @@ jobs:
           script: |
             git clone ${{ parameters.repo }}
       - task: CmdLine@2
-        displayName: "Install Snyc CLI"
+        displayName: "Install Snyk CLI"
         inputs:
           script: |
             curl --compressed https://static.snyk.io/cli/latest/snyk-linux -o snyk

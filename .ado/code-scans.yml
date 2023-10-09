@@ -22,7 +22,7 @@ pool:
   vmImage: ubuntu-latest
 
 jobs:
-  - template: "/.ado/templates/scan-dotnet-code.yml"
+  # - template: "/.ado/templates/scan-dotnet-code.yml"
     parameters:    
       SNYK_TOKEN: $(SNYK_TOKEN)
       SL_TOKEN: $(SL_TOKEN)
@@ -37,8 +37,7 @@ jobs:
         displayName: "Checkout a public GH repo"
         inputs:
           script: |
-            git clone https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo
-            cd shiftleft-csharp-demo/netcoreWebapi            
+            git clone https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo && cd shiftleft-csharp-demo/netcoreWebapi                       
       - task: SonarQubePrepare@5
         inputs:
           SonarQube: 'SonarQubeDotNetExample'
@@ -49,6 +48,8 @@ jobs:
         displayName: "Build code"
         inputs:
           script: |
+            pwd
+            ls -
             dotnet build 
       - task: SonarQubeAnalyze@5
         inputs:
