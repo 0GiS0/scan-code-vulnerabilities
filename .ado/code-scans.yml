@@ -28,10 +28,7 @@ jobs:
       SL_TOKEN: $(SL_TOKEN)
       repo: 'https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo'
       working_directory: 'shiftleft-csharp-demo/netcoreWebapi'
+      path: 'shiftleft-csharp-demo'
       app_name: 'shiftleft-csharp-demo'
       csproj: 'netcoreWebapi.csproj'
-      
-
-
-
   
