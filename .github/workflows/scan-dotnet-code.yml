@@ -26,6 +26,7 @@ jobs:
         # Repository name with owner. For example, actions/checkout
         # Default: ${{ github.repository }}
           repository: 'ShiftLeftSecurity/shiftleft-csharp-demo'
+          path: 'shiftleft-csharp-demo'
       - name: Cache SonarQube packages
         uses: actions/cache@v1
         with:
