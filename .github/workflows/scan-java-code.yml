@@ -27,20 +27,28 @@ jobs:
         # Default: ${{ github.repository }}
           repository: 'ShiftLeftSecurity/shiftleft-java-demo'
           path: 'shiftleft-csharp-demo'      
-      - name: Install SonarQube scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
+      - name: Install SonarQube scanner        
         run: |          
-          dotnet tool install --global dotnet-sonarscanner
+            mkdir -p $SONAR_DIR && cd $SONAR_DIR
+            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+            unzip sonar-scanner-cli-5.0.1.3006-linux.zip 
+            rm sonar-scanner-cli-5.0.1.3006-linux.zip
+            chmod +x sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner 
+            ln -s $SONAR_DIR/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner /usr/local/bin/sonar-scanner
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        shell: powershell
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any        
         run: |
-          cd shiftleft-csharp-demo/netcoreWebapi
-          dotnet sonarscanner begin /k:"shiftleft-java-demo" /d:sonar.host.url="${{ secrets.SONARQUBE_CODESPACES_URL }}" /d:sonar.login="${{ secrets.JAVA_SONARQUBE_TOKEN }}"     
-          dotnet build
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.JAVA_SONARQUBE_TOKEN }}"
+          cd shiftleft-java-demo          
+          mvn clean package
+          sonar-scanner \
+          -Dsonar.projectKey=shiftleft-java-demo \
+          -Dsonar.filesize.limit=100 \
+          -Dsonar.java.binaries=target/classes \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=${{ secrets.SONARQUBE_CODESPACES_URL }} \
+          -Dsonar.login=${{ secrets.JAVA_SONARQUBE_TOKEN }}
+          
   snyk:
     name: Snyk
     runs-on: ubuntu-latest
