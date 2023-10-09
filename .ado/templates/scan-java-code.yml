@@ -39,7 +39,7 @@ jobs:
             chmod +x sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner 
             ln -s $SONAR_DIR/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner /usr/local/bin/sonar-scanner
  
-       - task: CmdLine@2
+      - task: CmdLine@2
         displayName: "Build and analyze"
         inputs:
           script: |
