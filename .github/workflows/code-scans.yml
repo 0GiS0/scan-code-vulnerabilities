@@ -43,7 +43,7 @@ jobs:
     secrets:
       SL_TOKEN: ${{ secrets.SL_TOKEN }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      GO_SONARQUBE_TOKEN: ${{ secrets.DOTNET_SONARQUBE_TOKEN }}
+      GO_SONARQUBE_TOKEN: ${{ secrets.GO_SONARQUBE_TOKEN }}
       SONARQUBE_CODESPACES_URL: ${{ secrets.SONARQUBE_CODESPACES_URL }}
   # java:
   #   needs: go
