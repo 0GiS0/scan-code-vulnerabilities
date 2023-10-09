@@ -72,9 +72,10 @@ jobs:
       - name: Snyk Code test and report
         continue-on-error: true       
         run: |
+            cd shiftleft-csharp-demo/netcoreWebapi
             dotnet build
-            snyk code test ${{ inputs.working-directory }}/*.yaml --sarif || true
-            snyk code test ${{ inputs.working-directory }}/*.yaml  --sarif  > snyk-code.sarif
+            snyk code test --sarif || true
+            snyk code test --sarif  > snyk-code.sarif
 
       # Push the Snyk Code results into GitHub Code Scanning tab
       - name: Upload result to GitHub Code Scanning
