@@ -28,7 +28,9 @@ dotnet sonarscanner end /d:sonar.login="$DOTNET_SONARQUBE_TOKEN"
 ### Snyk ###
 
 snyk auth
-snyk code test --org=aac5cb6b-19db-452c-8d36-1cb4e0d91c6c
+snyk code test --json > snyk-report.json
+# Use snyk-to-html
+snyk-to-html -i  snyk-report.json -o snyk-report.html
 
 ### sast-scan tool ###
 
