@@ -1,0 +1,119 @@
+name: Scan Go Code
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".ado/**"      
+      - "README.md"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sonarqube:
+    name: Sonarqube
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - uses: actions/checkout@v4
+        with:
+        # Repository name with owner. For example, actions/checkout
+        # Default: ${{ github.repository }}
+          repository: 'ShiftLeftSecurity/shiftleft-go-demo'
+          path: 'shiftleft-go-demo'      
+      - name: Install SonarQube scanner        
+        run: |
+            SONAR_DIR=/opt/sonarscanner          
+            mkdir -p $SONAR_DIR && cd $SONAR_DIR
+            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+            unzip sonar-scanner-cli-5.0.1.3006-linux.zip 
+            rm sonar-scanner-cli-5.0.1.3006-linux.zip
+            chmod +x sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner 
+            ln -s $SONAR_DIR/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner /usr/local/bin/sonar-scanner
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any        
+        run: |
+          cd shiftleft-go-demo                    
+          sonar-scanner \
+          -Dsonar.projectKey=shiftleft-go-demo \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=${{ secrets.SONARQUBE_CODESPACES_URL }} \
+          -Dsonar.login=${{ secrets.PYTHON_SONARQUBE_TOKEN }}
+          
+  snyk:
+    name: Snyk
+    runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    permissions:
+      contents: read
+      security-events: write      
+    steps:
+      - uses: actions/checkout@v4
+        with:
+        # Repository name with owner. For example, actions/checkout
+        # Default: ${{ github.repository }}
+          repository: 'ShiftLeftSecurity/shiftleft-go-demo'
+          path: 'shiftleft-go-demo'
+      - name: Set up Snyk CLI to check for security issues
+        uses: snyk/actions/setup@806182742461562b67788a64410098c9d9b96adb
+              
+      - name: Snyk Code test and report
+        continue-on-error: true       
+        run: |
+            cd shiftleft-go-demo            
+            snyk code test --sarif || true
+            snyk code test --sarif  > snyk-code.sarif
+
+      # Push the Snyk Code results into GitHub Code Scanning tab
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
+        with:
+          sarif_file: shiftleft-go-demo/snyk-code.sarif  
+
+  sast-scan:
+    name: Sast-scan
+    runs-on: ubuntu-latest
+    env:
+      SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      # - uses: actions/setup-python@v4
+      #   with:
+      #     python-version: '3.8' 
+      - uses: actions/checkout@v4
+        with:        
+          repository: 'ShiftLeftSecurity/shiftleft-go-demo'
+          path: 'shiftleft-go-demo'
+      - name: Install sast-scan
+        run: |
+          curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
+      - name: Perform Scan
+        run: |
+          cd shiftleft-python-demo          
+          sl analyze --app shiftleft-go-demo --go --wait
+        env:
+          SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
+      - name: Get SARIF
+        continue-on-error: true
+        run: |
+          docker run --rm -e "WORKSPACE=${PWD}" -v $PWD:/app shiftleft/scan scan --src /app --out_dir /app/reports
+
+      - name: Check reports
+        run: |
+          ls reports
+      # - name: Upload result to GitHub Code Scanning
+      #   uses: github/codeql-action/upload-sarif@v2
+      #   if: success() || failure()
+      #   with:
+      #     sarif_file: reports/class-report.sarif
