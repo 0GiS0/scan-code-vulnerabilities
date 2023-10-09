@@ -3,13 +3,13 @@ name: Scan .NET Code
 on:
   workflow_call:
     secrets:
-      SL_TOKEN
+      SL_TOKEN:
         required: true      
-      SNYK_TOKEN
+      SNYK_TOKEN:
         required: true
-      DOTNET_SONARQUBE_TOKEN
+      DOTNET_SONARQUBE_TOKEN:
         required: true
-      SONARQUBE_CODESPACES_URL
+      SONARQUBE_CODESPACES_URL:
         required: true
     inputs:
       app-name:
