@@ -4,21 +4,15 @@ parameters:
   - name: SL_TOKEN # name of the parameter; required
     type: string # data type of the parameter; required
   - name: working_directory
-    type: string
-    required: true
+    type: string    
   - name: repo
-    type: string
-    required: true
+    type: string    
   - name: path
     type: string
-    required: false
-    default: manifests
   - name: app-name
-    type: string
-    required: true
+    type: string    
   - name: csproj
-    type: string
-    required: false    
+    type: string    
 
 jobs:
   # - job: SonarQube
