@@ -44,3 +44,23 @@ jobs:
       path: 'shiftleft-java-demo'
       app_name: 'shiftleft-java-demo'
       jar: 'target/*.jar'
+  - template: "/.ado/templates/scan-go-code.yml"
+    parameters:
+      GO_SONARQUBE_TOKEN: $(GO_SONARQUBE_TOKEN)
+      SONARQUBE_URL: $(SONARQUBE_CODESPACES_URL)
+      SNYK_TOKEN: $(SNYK_TOKEN)
+      SL_TOKEN: $(SL_TOKEN)
+      repo: 'https://github.com/ShiftLeftSecurity/shiftleft-go-demo'
+      working_directory: 'shiftleft-go-demo'
+      path: 'shiftleft-go-demo'
+      app_name: 'shiftleft-go-example'
+  - template: "/.ado/templates/scan-python-code.yml"
+    parameters:
+      GO_SONARQUBE_TOKEN: $(PYTHON_SONARQUBE_TOKEN)
+      SONARQUBE_URL: $(SONARQUBE_CODESPACES_URL)
+      SNYK_TOKEN: $(SNYK_TOKEN)
+      SL_TOKEN: $(SL_TOKEN)
+      repo: 'https://github.com/ShiftLeftSecurity/shiftleft-python-demo'
+      working_directory: 'shiftleft-python-demo'
+      path: 'shiftleft-python-demo'
+      app_name: 'shiftleft-python-demo'
