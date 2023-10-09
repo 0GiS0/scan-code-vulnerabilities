@@ -19,7 +19,7 @@ parameters:
     type: string    
 
 jobs:
-  - job: SonarQube
+  - job: SonarQubeForJava
     steps:
       - task: CmdLine@2
         displayName: "Checkout a public GH repo"
@@ -53,7 +53,7 @@ jobs:
             -Dsonar.host.url=${{ parameters.SONARQUBE_URL }} \
             -Dsonar.login=${{ parameters.JAVA_SONARQUBE_TOKEN }}
 
-  - job: Snyk
+  - job: SnykForJava
     steps:
       - task: CmdLine@2
         displayName: "Checkout a public GH repo"
@@ -81,7 +81,7 @@ jobs:
           ArtifactName: "CodeAnalysisLogs"
           publishLocation: "Container"
   
-  - job: SASTScan
+  - job: SASTScanForJava
     variables:
       SHIFTLEFT_ACCESS_TOKEN: ${{ parameters.SL_TOKEN }}
     steps:

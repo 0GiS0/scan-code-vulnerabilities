@@ -19,7 +19,7 @@ parameters:
     type: string    
 
 jobs:
-  - job: SonarQube
+  - job: SonarQubeForDotNet
     steps:
       - task: CmdLine@2
         displayName: "Checkout a public GH repo"
@@ -42,7 +42,7 @@ jobs:
             dotnet build
             dotnet sonarscanner end /d:sonar.login="${{ parameters.DOTNET_SONARQUBE_TOKEN }}"
 
-  - job: Snyk
+  - job: SnykForDotNet
     steps:
       - task: CmdLine@2
         displayName: "Checkout a public GH repo"
@@ -70,7 +70,7 @@ jobs:
           ArtifactName: "CodeAnalysisLogs"
           publishLocation: "Container"
   
-  - job: SASTScan
+  - job: SASTScanForDotNet
     variables:
       SHIFTLEFT_ACCESS_TOKEN: ${{ parameters.SL_TOKEN }}
     steps:
