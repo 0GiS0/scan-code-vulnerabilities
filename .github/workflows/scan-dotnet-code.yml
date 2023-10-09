@@ -97,12 +97,12 @@ jobs:
       security-events: write
     steps:
       - uses: actions/checkout@v4
-        with:
-        # Repository name with owner. For example, actions/checkout
-        # Default: ${{ github.repository }}
+        with:        
           repository: 'ShiftLeftSecurity/shiftleft-csharp-demo'
           path: 'shiftleft-csharp-demo'
       - name: Perform Scan
         uses: ShiftLeftSecurity/scan-action@master
         with:
           src: shiftleft-csharp-demo/netcoreWebapi
+        env:
+          SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
