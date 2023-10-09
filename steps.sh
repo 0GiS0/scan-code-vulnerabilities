@@ -39,7 +39,7 @@ cd ../..
 ############################################# Java Code #############################################
 #####################################################################################################
 
-git clone https://github.com/ShiftLeftSecurity/shiftleft-java-demo.git && cd shiftleft-java-demo
+git clone https://github.com/ShiftLeftSecurity/shiftleft-java-demo.git && cd shiftleft-java-demo 
 
 # Compile the code with maven
 mvn clean package
@@ -47,6 +47,7 @@ mvn clean package
 sonar-scanner \
   -Dsonar.projectKey=shiftleft-java-demo \
   -Dsonar.filesize.limit=100 \
+  -Dsonar.java.binaries=target/classes \
   -Dsonar.sources=. \
   -Dsonar.host.url=http://localhost:9000 \
   -Dsonar.login=$JAVA_SONARQUBE_TOKEN
