@@ -45,12 +45,22 @@ jobs:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       GO_SONARQUBE_TOKEN: ${{ secrets.GO_SONARQUBE_TOKEN }}
       SONARQUBE_CODESPACES_URL: ${{ secrets.SONARQUBE_CODESPACES_URL }}
-  # java:
-  #   needs: go
-  #   permissions:
-  #     contents: read
-  #     security-events: write
-  #   uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-java-code.yaml@main
+  java:
+    needs: go
+    permissions:
+      contents: read
+      security-events: write
+    uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-java-code.yaml@main
+    with:
+      app-name: 'shiftleft-java-demo'
+      repo: 'ShiftLeftSecurity/shiftleft-java-demo'
+      path: 'shiftleft-java-demo'
+      working-directory: 'shiftleft-java-demo'
+    secrets:
+      SL_TOKEN: ${{ secrets.SL_TOKEN }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      JAVA_SONARQUBE_TOKEN: ${{ secrets.JAVA_SONARQUBE_TOKEN }}
+      SONARQUBE_CODESPACES_URL: ${{ secrets.SONARQUBE_CODESPACES_URL }}
   # python:
   #   permissions:
   #     contents: read
