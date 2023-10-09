@@ -112,6 +112,6 @@ jobs:
         run: |
           cd ${{ inputs.working-directory }}
           dotnet build
-          sl analyze --app ${{ inputs.app-name }} --csharp --wait ${{ inputs.csproj } }}
+          sl analyze --app ${{ inputs.app-name }} --csharp --wait ${{ inputs.csproj }}
         env:
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
