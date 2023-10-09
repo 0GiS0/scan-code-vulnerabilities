@@ -19,6 +19,7 @@ jobs:
       security-events: write
     uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-dotnet-code.yaml@main
     with:
+      app-name: 'shiftleft-csharp-demo'
       repo: 'ShiftLeftSecurity/shiftleft-csharp-demo'
       path: 'shiftleft-csharp-demo'
       working-directory: 'shiftleft-csharp-demo/netcoreWebapi'
