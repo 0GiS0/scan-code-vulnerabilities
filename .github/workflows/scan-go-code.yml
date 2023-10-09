@@ -100,7 +100,7 @@ jobs:
           curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
       - name: Perform Scan
         run: |
-          cd shiftleft-python-demo          
+          cd shiftleft-go-demo          
           sl analyze --app shiftleft-go-demo --go --wait
         env:
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
