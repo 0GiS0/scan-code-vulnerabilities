@@ -1,5 +1,5 @@
 parameters:
-  - name: DOTNET_SONARQUBE_TOKEN # name of the parameter; required
+  - name: JAVA_SONARQUBE_TOKEN # name of the parameter; required
     type: string # data type of the parameter; required
   - name: SONARQUBE_URL # name of the parameter; required
     type: string # data type of the parameter; required
@@ -15,7 +15,7 @@ parameters:
     type: string
   - name: app_name
     type: string    
-  - name: csproj
+  - name: jar
     type: string    
 
 jobs:
@@ -31,16 +31,28 @@ jobs:
         displayName: "Install SonarQube scanner" 
         inputs:
           script: |          
-            dotnet tool install --global dotnet-sonarscanner
+            SONAR_DIR=/opt/sonarscanner          
+            mkdir -p $SONAR_DIR && cd $SONAR_DIR
+            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+            unzip sonar-scanner-cli-5.0.1.3006-linux.zip 
+            rm sonar-scanner-cli-5.0.1.3006-linux.zip
+            chmod +x sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner 
+            ln -s $SONAR_DIR/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner /usr/local/bin/sonar-scanner
+      - name: Build and analyze
 
       - task: CmdLine@2
         displayName: "Build and analyze"
         inputs:
           script: |
-            cd ${{ parameters.working_directory }}
-            dotnet sonarscanner begin /k:"${{ parameters.app_name }}" /d:sonar.host.url="${{ parameters.SONARQUBE_URL }}" /d:sonar.login="${{ parameters.DOTNET_SONARQUBE_TOKEN }}"     
-            dotnet build
-            dotnet sonarscanner end /d:sonar.login="${{ parameters.DOTNET_SONARQUBE_TOKEN }}"
+             cd ${{ parameters.working_directory }}      
+          mvn clean package
+          sonar-scanner \
+          -Dsonar.projectKey=${{ parameters.app_name }} \
+          -Dsonar.filesize.limit=100 \
+          -Dsonar.java.binaries=target/classes \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=${{ secrets.SONARQUBE_URL }} \
+          -Dsonar.login=${{ secrets.JAVA_SONARQUBE_TOKEN }}
 
   - job: Snyk
     steps:
@@ -57,11 +69,11 @@ jobs:
             chmod +x ./snyk
             mv ./snyk /usr/local/bin/
       - task: CmdLine@2
-        displayName: "Scan .NET code"
+        displayName: "Scan Java code"
         inputs:
           script: |
             cd ${{ parameters.working_directory }}
-            dotnet build
+            mvn clean package
             snyk code test --sarif || true
             snyk code test --sarif > $(Build.ArtifactStagingDirectory)/snyk-code.sarif || true
       - task: PublishBuildArtifacts@1
@@ -85,9 +97,9 @@ jobs:
           script: |
             curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
       - task: CmdLine@2
-        displayName: "Scan .NET code"
+        displayName: "Scan Java code"
         inputs:
           script: |
             cd ${{ parameters.working_directory }}
-            dotnet build
-            sl analyze --app ${{ parameters.app_name }} --csharp --wait ${{ parameters.csproj }}
+            mvn clean package
+            sl analyze --app ${{ parameters.app_name }} --java --wait ${{ parameters.jar }}
