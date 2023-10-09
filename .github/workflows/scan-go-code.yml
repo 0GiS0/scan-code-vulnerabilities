@@ -40,12 +40,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any        
         run: |
-          cd shiftleft-go-demo                    
+          cd shiftleft-go-demo
+          go build                    
           sonar-scanner \
           -Dsonar.projectKey=shiftleft-go-demo \
           -Dsonar.sources=. \
           -Dsonar.host.url=${{ secrets.SONARQUBE_CODESPACES_URL }} \
-          -Dsonar.login=${{ secrets.PYTHON_SONARQUBE_TOKEN }}
+          -Dsonar.login=${{ secrets.GO_SONARQUBE_TOKEN }}
           
   snyk:
     name: Snyk
