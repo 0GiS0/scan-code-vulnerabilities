@@ -21,6 +21,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
+      - uses: actions/setup-go@v4 
       - uses: actions/checkout@v4
         with:
         # Repository name with owner. For example, actions/checkout
@@ -69,7 +70,8 @@ jobs:
       - name: Snyk Code test and report
         continue-on-error: true       
         run: |
-            cd shiftleft-go-demo            
+            cd shiftleft-go-demo
+            go build        
             snyk code test --sarif || true
             snyk code test --sarif  > snyk-code.sarif
 
@@ -89,9 +91,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      # - uses: actions/setup-python@v4
-      #   with:
-      #     python-version: '3.8' 
+      - uses: actions/setup-go@v4 
       - uses: actions/checkout@v4
         with:        
           repository: 'ShiftLeftSecurity/shiftleft-go-demo'
@@ -101,7 +101,8 @@ jobs:
           curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
       - name: Perform Scan
         run: |
-          cd shiftleft-go-demo          
+          cd shiftleft-go-demo
+          go build        
           sl analyze --app shiftleft-go-demo --go --wait
         env:
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
