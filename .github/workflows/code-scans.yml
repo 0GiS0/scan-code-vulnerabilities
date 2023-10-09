@@ -24,7 +24,10 @@ jobs:
       path: 'shiftleft-csharp-demo'
       working-directory: 'shiftleft-csharp-demo/netcoreWebapi'
     secrets:
-      inherit: true
+      SL_TOKEN: ${{ secrets.SL_TOKEN }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      DOTNET_SONARQUBE_TOKEN: ${{ secrets.DOTNET_SONARQUBE_TOKEN }}
+      SONARQUBE_CODESPACES_URL: ${{ secrets.SONARQUBE_CODESPACES_URL }}
   # go:
   #   needs: dotnet
   #   permissions:
