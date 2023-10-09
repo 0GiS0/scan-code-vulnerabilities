@@ -100,9 +100,13 @@ jobs:
         with:        
           repository: 'ShiftLeftSecurity/shiftleft-csharp-demo'
           path: 'shiftleft-csharp-demo'
+      - name: Install sast-scan
+        run: |
+          curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
       - name: Perform Scan
-        uses: ShiftLeftSecurity/scan-action@master
-        with:
-          src: shiftleft-csharp-demo/netcoreWebapi
+        run: |
+          cd shiftleft-csharp-demo/netcoreWebapi
+          dotnet build
+          sl analyze --app shiftleft-csharp-demo --csharp --wait netcoreWebapi.csproj
         env:
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
