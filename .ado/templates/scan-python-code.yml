@@ -93,6 +93,5 @@ jobs:
         displayName: "Scan Python code"
         inputs:
           script: |
-            cd ${{ parameters.working_directory }}
-            go build
+            cd ${{ parameters.working_directory }}            
             sl analyze --app ${{ parameters.app_name }} --go --wait
