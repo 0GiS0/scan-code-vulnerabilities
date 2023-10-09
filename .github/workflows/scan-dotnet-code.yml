@@ -59,6 +59,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    permissions:
+      contents: read
+      security-events: write      
     steps:
       - uses: actions/checkout@v4
         with:
