@@ -9,7 +9,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # image: mcr.microsoft.com/devcontainers/dotnet:0-7.0
     volumes:
       - ../..:/workspaces:cached
      # Overrides default command so things don't shut down after the process ends.

@@ -14,5 +14,3 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && sudo chmod +x sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner \
     && sudo ln -s $SONAR_DIR/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner /usr/local/bin/sonar-scanner \
     && sudo curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
-    
-
