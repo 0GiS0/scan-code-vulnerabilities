@@ -1,6 +1,8 @@
 parameters:
   - name: SNYK_TOKEN # name of the parameter; required
     type: string # data type of the parameter; required
+  - name: SL_TOKEN # name of the parameter; required
+    type: string # data type of the parameter; required
   - name: working_directory
     type: string
     required: true
@@ -50,6 +52,8 @@ jobs:
           publishLocation: "Container"
   
   - job: SASTScan
+    variables:
+      SHIFTLEFT_ACCESS_TOKEN: ${{ parameters.SL_TOKEN }}
     steps:
       - task: CmdLine@2
         displayName: "Checkout a public GH repo"
