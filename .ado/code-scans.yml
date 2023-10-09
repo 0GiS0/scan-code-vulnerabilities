@@ -38,18 +38,24 @@ jobs:
         inputs:
           script: |
             git clone https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo && cd shiftleft-csharp-demo/netcoreWebapi                       
+
       - task: SonarQubePrepare@5
         inputs:
           SonarQube: 'SonarQubeDotNetExample'
           scannerMode: 'MSBuild'
           projectKey: 'shiftleft-csharp-demo'
-          projectName: 'shiftleft-csharp-demo'      
+          projectName: 'shiftleft-csharp-demo'
+          extraProperties: |
+            # Additional properties that will be passed to the scanner, 
+            # Put one key=value per line, example:
+            # sonar.exclusions=**/*.bin
+            sonar.projectBaseDir=shiftleft-csharp-demo/netcoreWebapi
+
       - task: CmdLine@2
         displayName: "Build code"
         inputs:
           script: |
-            pwd
-            ls -
+            cd shiftleft-csharp-demo/netcoreWebapi
             dotnet build 
       - task: SonarQubeAnalyze@5
         inputs:
