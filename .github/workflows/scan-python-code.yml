@@ -40,8 +40,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any        
         run: |
-          cd shiftleft-python-demo          
-          mvn clean package
+          cd shiftleft-python-demo                    
           sonar-scanner \
           -Dsonar.projectKey=shiftleft-python-demo \
           -Dsonar.sources=. \
@@ -99,7 +98,7 @@ jobs:
       - name: Perform Scan
         run: |
           cd shiftleft-python-demo          
-          sl analyze --app shiftleft-python-demo --python --wait netcoreWebapi.csproj
+          sl analyze --app shiftleft-python-demo --python --wait
         env:
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
       - name: Get SARIF
