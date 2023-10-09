@@ -76,7 +76,7 @@ jobs:
       - name: Snyk Code test and report
         continue-on-error: true       
         run: |
-            cd ${{ inputs.working-directory }}}
+            cd ${{ inputs.working-directory }}
             dotnet build
             snyk code test --sarif || true
             snyk code test --sarif  > snyk-code.sarif
@@ -86,7 +86,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         if: success() || failure()
         with:
-          sarif_file: ${{ inputs.working-directory }}}/snyk-code.sarif  
+          sarif_file: ${{ inputs.working-directory }}/snyk-code.sarif  
 
   sast-scan:
     name: Sast-scan
