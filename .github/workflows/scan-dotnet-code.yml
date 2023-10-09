@@ -51,6 +51,6 @@ jobs:
         shell: powershell
         run: |
           cd shiftleft-csharp-demo/netcoreWebapi
-          dotnet sonarscanner begin /k:"shiftleft-csharp-demo" /d:sonar.host.url="${{ secrets.SONARQUBE_CODESPACES_URL }}" /d:sonar.login="$DOTNET_SONARQUBE_TOKEN"     
+          dotnet sonarscanner begin /k:"shiftleft-csharp-demo" /d:sonar.host.url="${{ secrets.SONARQUBE_CODESPACES_URL }}" /d:sonar.login="${{ secrets.DOTNET_SONARQUBE_TOKEN }}"     
           dotnet build
           dotnet sonarscanner end /d:sonar.login="${{ secrets.DOTNET_SONARQUBE_TOKEN }}"
