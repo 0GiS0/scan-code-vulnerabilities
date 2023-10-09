@@ -35,7 +35,7 @@ jobs:
       csproj: 'netcoreWebapi.csproj'
   - template: "/.ado/templates/scan-java-code.yml"
     parameters:
-      DOTNET_SONARQUBE_TOKEN: $(JAVA_SONARQUBE_TOKEN)
+      JAVA_SONARQUBE_TOKEN: $(JAVA_SONARQUBE_TOKEN)
       SONARQUBE_URL: $(SONARQUBE_CODESPACES_URL)
       SNYK_TOKEN: $(SNYK_TOKEN)
       SL_TOKEN: $(SL_TOKEN)
@@ -43,4 +43,4 @@ jobs:
       working_directory: 'shiftleft-java-demo'
       path: 'shiftleft-java-demo'
       app_name: 'shiftleft-java-demo'
-      csproj: 'target/*.jar'
+      jar: 'target/*.jar'
