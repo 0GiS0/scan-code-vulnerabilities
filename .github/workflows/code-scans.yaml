@@ -36,7 +36,7 @@ jobs:
       security-events: write
     uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-go-code.yaml@main
     with:
-      app-name: 'shiftleft-go-demo'
+      app-name: 'shiftleft-go-example'
       repo: 'ShiftLeftSecurity/shiftleft-go-demo'
       path: 'shiftleft-go-demo'
       working-directory: 'shiftleft-go-demo'
