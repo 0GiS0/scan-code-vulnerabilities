@@ -31,4 +31,25 @@ jobs:
       path: 'shiftleft-csharp-demo'
       app_name: 'shiftleft-csharp-demo'
       csproj: 'netcoreWebapi.csproj'
-  
+  - job: SonarQube
+    steps:
+      - task: CmdLine@2
+        displayName: "Checkout a public GH repo"
+        inputs:
+          script: |
+            git clone https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo
+            cd shiftleft-csharp-demo/netcoreWebapi            
+      - task: SonarQubePrepare@5
+        inputs:
+          SonarQube: 'SonarQubeDotNetExample'
+          scannerMode: 'MSBuild'
+          projectKey: 'shiftleft-csharp-demo'
+          projectName: 'shiftleft-csharp-demo'      
+      - task: CmdLine@2
+        displayName: "Build code"
+        inputs:
+          script: |
+            dotnet build 
+      - task: SonarQubeAnalyze@5
+        inputs:
+          jdkversion: 'JAVA_HOME_11_X64'
