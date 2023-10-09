@@ -17,7 +17,7 @@ parameters:
     type: string    
 
 jobs:
-  - job: SonarQubeForJava
+  - job: SonarQubeForGo
     steps:
       - task: CmdLine@2
         displayName: "Checkout a public GH repo"
@@ -47,9 +47,9 @@ jobs:
             -Dsonar.projectKey=${{ parameters.app_name }} \           
             -Dsonar.sources=. \
             -Dsonar.host.url=${{ parameters.SONARQUBE_URL }} \
-            -Dsonar.login=${{ parameters.JAVA_SONARQUBE_TOKEN }}
+            -Dsonar.login=${{ parameters.GO_SONARQUBE_TOKEN }}
 
-  - job: SnykForJava
+  - job: SnykForGo
     steps:
       - task: CmdLine@2
         displayName: "Checkout a public GH repo"
@@ -64,7 +64,7 @@ jobs:
             chmod +x ./snyk
             mv ./snyk /usr/local/bin/
       - task: CmdLine@2
-        displayName: "Scan Java code"
+        displayName: "Scan Go code"
         inputs:
           script: |
             cd ${{ parameters.working_directory }}
@@ -77,7 +77,7 @@ jobs:
           ArtifactName: "CodeAnalysisLogs"
           publishLocation: "Container"
   
-  - job: SASTScanForJava
+  - job: SASTScanForGo
     variables:
       SHIFTLEFT_ACCESS_TOKEN: ${{ parameters.SL_TOKEN }}
     steps:
@@ -92,7 +92,7 @@ jobs:
           script: |
             curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
       - task: CmdLine@2
-        displayName: "Scan Java code"
+        displayName: "Scan Go code"
         inputs:
           script: |
             cd ${{ parameters.working_directory }}
