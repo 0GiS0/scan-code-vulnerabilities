@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - ".ado/**"
+      - ".ado/**"      
       - "README.md"
   pull_request:
     branches:
@@ -26,7 +26,7 @@ jobs:
         # Repository name with owner. For example, actions/checkout
         # Default: ${{ github.repository }}
           repository: 'ShiftLeftSecurity/shiftleft-java-demo'
-          path: 'shiftleft-csharp-demo'      
+          path: 'shiftleft-java-demo'      
       - name: Install SonarQube scanner        
         run: |          
             mkdir -p $SONAR_DIR && cd $SONAR_DIR
