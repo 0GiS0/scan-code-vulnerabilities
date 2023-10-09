@@ -1,0 +1,43 @@
+name: Code scans
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".ado/**"
+      - "README.md"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  dotnet:
+    permissions:
+      contents: read
+      security-events: write
+    uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-dotnet-code.yaml@main
+    with:
+      repo: 'ShiftLeftSecurity/shiftleft-csharp-demo'
+      path: 'shiftleft-csharp-demo'
+      working-directory: 'shiftleft-csharp-demo/netcoreWebapi'
+    secrets:
+      inherit: true
+  # go:
+  #   needs: dotnet
+  #   permissions:
+  #     contents: read
+  #     security-events: write
+  #   uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-go-code.yaml@main
+  # java:
+  #   needs: go
+  #   permissions:
+  #     contents: read
+  #     security-events: write
+  #   uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-java-code.yaml@main
+  # python:
+  #   permissions:
+  #     contents: read
+  #     security-events: write
+  #   uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-python-code.yaml@main

@@ -1,16 +1,35 @@
 name: Scan .NET Code
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - ".ado/**"
-      - "README.md"
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+  workflow_call:
+    secrets:
+      SL_TOKEN
+        required: true      
+      SNYK_TOKEN
+        required: true
+      DOTNET_SONARQUBE_TOKEN
+        required: true
+      SONARQUBE_CODESPACES_URL
+        required: true
+    inputs:
+      app-name:
+        description: 'The name of the application to scan'
+        type: string
+        required: true
+      repo:
+        description: 'The repository to scan'
+        type: string
+        required: true
+      path:
+        description: 'The path to the repository to scan'
+        type: string
+        required: false
+        default: 'shiftleft-csharp-demo'
+      working-directory:
+        description: 'The working directory to scan'
+        type: string
+        required: false
+        default: 'manifests'
 
 jobs:
   sonarqube:
@@ -23,35 +42,19 @@ jobs:
           java-version: 1.11
       - uses: actions/checkout@v4
         with:
-        # Repository name with owner. For example, actions/checkout
-        # Default: ${{ github.repository }}
-          repository: 'ShiftLeftSecurity/shiftleft-csharp-demo'
-          path: 'shiftleft-csharp-demo'
-      - name: Cache SonarQube packages
-        uses: actions/cache@v1
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache SonarQube scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v1
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-      - name: Install SonarQube scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+          repository: ${{ inputs.repo }}
+          path: ${{ inputs.path }}
+      - name: Install SonarQube scanner        
         shell: powershell
         run: |          
           dotnet tool install --global dotnet-sonarscanner
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: powershell
         run: |
-          cd shiftleft-csharp-demo/netcoreWebapi
-          dotnet sonarscanner begin /k:"shiftleft-csharp-demo" /d:sonar.host.url="${{ secrets.SONARQUBE_CODESPACES_URL }}" /d:sonar.login="${{ secrets.DOTNET_SONARQUBE_TOKEN }}"     
+          cd ${{ inputs.working-directory }}}
+          dotnet sonarscanner begin /k:"${{ inputs.app-name }}" /d:sonar.host.url="${{ secrets.SONARQUBE_CODESPACES_URL }}" /d:sonar.login="${{ secrets.DOTNET_SONARQUBE_TOKEN }}"     
           dotnet build
           dotnet sonarscanner end /d:sonar.login="${{ secrets.DOTNET_SONARQUBE_TOKEN }}"
   snyk:
@@ -65,17 +68,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-        # Repository name with owner. For example, actions/checkout
-        # Default: ${{ github.repository }}
-          repository: 'ShiftLeftSecurity/shiftleft-csharp-demo'
-          path: 'shiftleft-csharp-demo'
+          repository: ${{ inputs.repo }}
+          path: ${{ inputs.path }}
       - name: Set up Snyk CLI to check for security issues
         uses: snyk/actions/setup@806182742461562b67788a64410098c9d9b96adb
               
       - name: Snyk Code test and report
         continue-on-error: true       
         run: |
-            cd shiftleft-csharp-demo/netcoreWebapi
+            cd ${{ inputs.working-directory }}}
             dotnet build
             snyk code test --sarif || true
             snyk code test --sarif  > snyk-code.sarif
@@ -85,7 +86,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         if: success() || failure()
         with:
-          sarif_file: shiftleft-csharp-demo/netcoreWebapi/snyk-code.sarif  
+          sarif_file: ${{ inputs.working-directory }}}/snyk-code.sarif  
 
   sast-scan:
     name: Sast-scan
@@ -98,15 +99,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:        
-          repository: 'ShiftLeftSecurity/shiftleft-csharp-demo'
-          path: 'shiftleft-csharp-demo'
+          repository: ${{ inputs.repo }}
+          path: ${{ inputs.path }}
       - name: Install sast-scan
         run: |
           curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
       - name: Perform Scan
         run: |
-          cd shiftleft-csharp-demo/netcoreWebapi
+          cd ${{ inputs.working-directory }}}
           dotnet build
-          sl analyze --app shiftleft-csharp-demo --csharp --wait netcoreWebapi.csproj
+          sl analyze --app ${{ inputs.app-name }} --csharp --wait netcoreWebapi.csproj
         env:
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
