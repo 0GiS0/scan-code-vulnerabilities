@@ -37,7 +37,7 @@ jobs:
         displayName: "Build and analyze"
         inputs:
           script: |
-            cd ${{ parameters.working-directory }}
+            cd ${{ parameters.working_directory }}
             dotnet sonarscanner begin /k:"${{ parameters.app_name }}" /d:sonar.host.url="${{ parameters.SONARQUBE_URL }}" /d:sonar.login="${{ parameters.DOTNET_SONARQUBE_TOKEN }}"     
             dotnet build
             dotnet sonarscanner end /d:sonar.login="${{ parameters.DOTNET_SONARQUBE_TOKEN }}"
