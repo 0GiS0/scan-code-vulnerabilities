@@ -14,7 +14,7 @@ on:
 
 jobs:
   sonarqube:
-    name: Build
+    name: Sonarqube
     runs-on: windows-latest
     steps:
       - name: Set up JDK 11
@@ -54,3 +54,31 @@ jobs:
           dotnet sonarscanner begin /k:"shiftleft-csharp-demo" /d:sonar.host.url="${{ secrets.SONARQUBE_CODESPACES_URL }}" /d:sonar.login="${{ secrets.DOTNET_SONARQUBE_TOKEN }}"     
           dotnet build
           dotnet sonarscanner end /d:sonar.login="${{ secrets.DOTNET_SONARQUBE_TOKEN }}"
+  snyk:
+    name: Snyk
+    runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+        # Repository name with owner. For example, actions/checkout
+        # Default: ${{ github.repository }}
+          repository: 'ShiftLeftSecurity/shiftleft-csharp-demo'
+          path: 'shiftleft-csharp-demo'
+      - name: Set up Snyk CLI to check for security issues
+        uses: snyk/actions/setup@806182742461562b67788a64410098c9d9b96adb
+              
+      - name: Snyk Code test and report
+        continue-on-error: true       
+        run: |
+            dotnet build
+            snyk code test ${{ inputs.working-directory }}/*.yaml --sarif || true
+            snyk code test ${{ inputs.working-directory }}/*.yaml  --sarif  > snyk-code.sarif
+
+      # Push the Snyk Code results into GitHub Code Scanning tab
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
+        with:
+          sarif_file: snyk-code.sarif  
