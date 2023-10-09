@@ -16,7 +16,10 @@ parameters:
   - name: app_name
     type: string    
   - name: jar
-    type: string    
+    type: string
+  - name: DependsOn
+    type: object
+    default: []
 
 jobs:
   - job: SonarQubeForJava
@@ -82,6 +85,7 @@ jobs:
           publishLocation: "Container"
   
   - job: SASTScanForJava
+    dependsOn: ${{ parameters.DependsOn }}
     variables:
       SHIFTLEFT_ACCESS_TOKEN: ${{ parameters.SL_TOKEN }}
     steps:

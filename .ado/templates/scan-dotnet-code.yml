@@ -16,8 +16,11 @@ parameters:
   - name: app_name
     type: string    
   - name: csproj
-    type: string    
-
+    type: string
+  - name: DependsOn
+    type: object
+    default: []
+    
 jobs:
   - job: SonarQubeForDotNet
     steps:
@@ -71,6 +74,7 @@ jobs:
           publishLocation: "Container"
   
   - job: SASTScanForDotNet
+    dependsOn: ${{ parameters.DependsOn }}
     variables:
       SHIFTLEFT_ACCESS_TOKEN: ${{ parameters.SL_TOKEN }}
     steps:

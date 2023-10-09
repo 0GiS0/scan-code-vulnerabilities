@@ -32,7 +32,7 @@ jobs:
       working_directory: 'shiftleft-csharp-demo/netcoreWebapi'
       path: 'shiftleft-csharp-demo'
       app_name: 'shiftleft-csharp-demo'
-      csproj: 'netcoreWebapi.csproj'
+      csproj: 'netcoreWebapi.csproj'      
   - template: "/.ado/templates/scan-java-code.yml"
     parameters:
       JAVA_SONARQUBE_TOKEN: $(JAVA_SONARQUBE_TOKEN)
@@ -44,6 +44,7 @@ jobs:
       path: 'shiftleft-java-demo'
       app_name: 'shiftleft-java-demo'
       jar: 'target/*.jar'
+      DependsOn: ['SASTScanForDotNet']
   - template: "/.ado/templates/scan-go-code.yml"
     parameters:
       GO_SONARQUBE_TOKEN: $(GO_SONARQUBE_TOKEN)
@@ -54,6 +55,7 @@ jobs:
       working_directory: 'shiftleft-go-demo'
       path: 'shiftleft-go-demo'
       app_name: 'shiftleft-go-example'
+      DependsOn: ['SASTScanForJava']
   - template: "/.ado/templates/scan-python-code.yml"
     parameters:
       PYTHON_SONARQUBE_TOKEN: $(PYTHON_SONARQUBE_TOKEN)
@@ -64,3 +66,4 @@ jobs:
       working_directory: 'shiftleft-python-demo'
       path: 'shiftleft-python-demo'
       app_name: 'shiftleft-python-demo'
+      DependsOn: ['SASTScanForGo']

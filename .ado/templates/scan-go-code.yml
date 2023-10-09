@@ -14,7 +14,10 @@ parameters:
   - name: path
     type: string
   - name: app_name
-    type: string    
+    type: string
+  - name: DependsOn
+    type: object
+    default: []
 
 jobs:
   - job: SonarQubeForGo
@@ -78,6 +81,7 @@ jobs:
           publishLocation: "Container"
   
   - job: SASTScanForGo
+    dependsOn: ${{ parameters.DependsOn }}
     variables:
       SHIFTLEFT_ACCESS_TOKEN: ${{ parameters.SL_TOKEN }}
     steps:
