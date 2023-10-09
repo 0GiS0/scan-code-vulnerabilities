@@ -53,7 +53,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: powershell
         run: |
-          cd ${{ inputs.working-directory }}}
+          cd ${{ inputs.working-directory }}
           dotnet sonarscanner begin /k:"${{ inputs.app-name }}" /d:sonar.host.url="${{ secrets.SONARQUBE_CODESPACES_URL }}" /d:sonar.login="${{ secrets.DOTNET_SONARQUBE_TOKEN }}"     
           dotnet build
           dotnet sonarscanner end /d:sonar.login="${{ secrets.DOTNET_SONARQUBE_TOKEN }}"
@@ -106,7 +106,7 @@ jobs:
           curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
       - name: Perform Scan
         run: |
-          cd ${{ inputs.working-directory }}}
+          cd ${{ inputs.working-directory }}
           dotnet build
           sl analyze --app ${{ inputs.app-name }} --csharp --wait netcoreWebapi.csproj
         env:
