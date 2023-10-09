@@ -61,8 +61,19 @@ jobs:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       JAVA_SONARQUBE_TOKEN: ${{ secrets.JAVA_SONARQUBE_TOKEN }}
       SONARQUBE_CODESPACES_URL: ${{ secrets.SONARQUBE_CODESPACES_URL }}
-  # python:
-  #   permissions:
-  #     contents: read
-  #     security-events: write
-  #   uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-python-code.yaml@main
+  python:
+    needs: java
+    permissions:
+      contents: read
+      security-events: write
+    uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-python-code.yaml@main
+    with:
+      app-name: 'shiftleft-python-demo'
+      repo: 'ShiftLeftSecurity/shiftleft-python-demo'
+      path: 'shiftleft-python-demo'
+      working-directory: 'shiftleft-python-demo'
+    secrets:
+      SL_TOKEN: ${{ secrets.SL_TOKEN }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      PYTHON_SONARQUBE_TOKEN: ${{ secrets.PYTHON_SONARQUBE_TOKEN }}
+      SONARQUBE_CODESPACES_URL: ${{ secrets.SONARQUBE_CODESPACES_URL }}
