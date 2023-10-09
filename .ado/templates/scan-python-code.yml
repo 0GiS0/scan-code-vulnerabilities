@@ -45,11 +45,7 @@ jobs:
         inputs:
           script: |
             cd ${{ parameters.working_directory }}
-            sonar-scanner \
-            -Dsonar.projectKey=${{ parameters.app_name }} \           
-            -Dsonar.sources=. \
-            -Dsonar.host.url=${{ parameters.SONARQUBE_URL }} \
-            -Dsonar.login=${{ parameters.PYTHON_SONARQUBE_TOKEN }}
+            sonar-scanner -Dsonar.projectKey=${{ parameters.app_name }} -Dsonar.sources=. -Dsonar.host.url=${{ parameters.SONARQUBE_URL }} -Dsonar.login=${{ parameters.PYTHON_SONARQUBE_TOKEN }}
 
   - job: SnykForPython
     steps:
@@ -97,6 +93,5 @@ jobs:
         displayName: "Scan Python code"
         inputs:
           script: |
-            cd ${{ parameters.working_directory }}
-            go build
+            cd ${{ parameters.working_directory }}            
             sl analyze --app ${{ parameters.app_name }} --go --wait

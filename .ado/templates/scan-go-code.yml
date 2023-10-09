@@ -46,12 +46,8 @@ jobs:
           script: |
             cd ${{ parameters.working_directory }}      
             go build
-            sonar-scanner \
-            -Dsonar.projectKey=${{ parameters.app_name }} \           
-            -Dsonar.sources=. \
-            -Dsonar.host.url=${{ parameters.SONARQUBE_URL }} \
-            -Dsonar.login=${{ parameters.GO_SONARQUBE_TOKEN }}
-
+            sonar-scanner -Dsonar.projectKey=${{ parameters.app_name }} -Dsonar.sources=. -Dsonar.host.url=${{ parameters.SONARQUBE_URL }} -Dsonar.login=${{ parameters.GO_SONARQUBE_TOKEN }}
+            
   - job: SnykForGo
     steps:
       - task: CmdLine@2

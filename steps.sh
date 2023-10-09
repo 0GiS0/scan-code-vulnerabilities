@@ -25,11 +25,13 @@ dotnet build
 # Execute sonarQube for .NET
 dotnet sonarscanner end /d:sonar.login="$DOTNET_SONARQUBE_TOKEN"
 
-### snyk ###
+### Snyk ###
+
 snyk auth
 snyk code test --org=aac5cb6b-19db-452c-8d36-1cb4e0d91c6c
 
 ### sast-scan tool ###
+
 export SHIFTLEFT_ACCESS_TOKEN=$SL_TOKEN
 sl analyze --app shiftleft-csharp-demo --csharp --wait netcoreWebapi.csproj
 
@@ -43,6 +45,8 @@ git clone https://github.com/ShiftLeftSecurity/shiftleft-java-demo.git && cd shi
 
 # Compile the code with maven
 mvn clean package
+
+### sonarQube ###
 
 sonar-scanner \
   -Dsonar.projectKey=shiftleft-java-demo \
@@ -60,13 +64,15 @@ sonar-scanner \
 
 cd ..
 
-### snyk ###
+### Snyk ###
+
 export SNYK_TOKEN=$SNYK_TOKEN
 snyk code test
 
 ### sast-scan tool ###
+
 export SHIFTLEFT_ACCESS_TOKEN=$SL_TOKEN
-sl analyze --app shiftleft-java-demo --java --wait target/hello-shiftleft-0.0.1.jar
+sl analyze --app shiftleft-java-demo --java --wait target/*.jar
 
 cd ..
 
@@ -76,18 +82,21 @@ cd ..
 
 git clone https://github.com/ShiftLeftSecurity/shiftleft-python-demo.git && cd shiftleft-python-demo
 
-# Execute sonarQube for Python
+### sonarQube ###
+
 sonar-scanner \
   -Dsonar.projectKey=shiftleft-python-demo \
   -Dsonar.sources=. \
   -Dsonar.host.url=http://localhost:9000 \
   -Dsonar.login=$PYTHON_SONARQUBE_TOKEN
 
-### snyk ###
+### Snyk ###
+
 export SNYK_TOKEN=$SNYK_TOKEN
 snyk code test
 
 ### sast-scan tool ###
+
 export SHIFTLEFT_ACCESS_TOKEN=$SL_TOKEN
 sl analyze --app shiftleft-python-demo --python --wait
 
@@ -98,16 +107,22 @@ cd ..
 
 git clone https://github.com/ShiftLeftSecurity/shiftleft-go-example.git && cd shiftleft-go-example
 
+go build
+
+### sonarQube ###
+
 sonar-scanner \
   -Dsonar.projectKey=shiftleft-go-example \
   -Dsonar.sources=. \
   -Dsonar.host.url=http://localhost:9000 \
   -Dsonar.login=$GO_SONARQUBE_TOKEN
 
-### snyk ###
+### Snyk ###
+
 snyk auth
 snyk code test
 
 ### sast-scan tool ###
+
 export SHIFTLEFT_ACCESS_TOKEN=$SL_TOKEN
 sl analyze --app shiftleft-go-example --go --wait
