@@ -23,14 +23,14 @@ pool:
 
 jobs:
   # - template: "/.ado/templates/scan-dotnet-code.yml"
-    parameters:    
-      SNYK_TOKEN: $(SNYK_TOKEN)
-      SL_TOKEN: $(SL_TOKEN)
-      repo: 'https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo'
-      working_directory: 'shiftleft-csharp-demo/netcoreWebapi'
-      path: 'shiftleft-csharp-demo'
-      app_name: 'shiftleft-csharp-demo'
-      csproj: 'netcoreWebapi.csproj'
+    # parameters:    
+    #   SNYK_TOKEN: $(SNYK_TOKEN)
+    #   SL_TOKEN: $(SL_TOKEN)
+    #   repo: 'https://github.com/ShiftLeftSecurity/shiftleft-csharp-demo'
+    #   working_directory: 'shiftleft-csharp-demo/netcoreWebapi'
+    #   path: 'shiftleft-csharp-demo'
+    #   app_name: 'shiftleft-csharp-demo'
+    #   csproj: 'netcoreWebapi.csproj'
   - job: SonarQube
     steps:
       - task: CmdLine@2
