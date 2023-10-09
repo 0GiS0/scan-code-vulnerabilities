@@ -42,10 +42,8 @@ jobs:
       - uses: actions/setup-go@v4 
       - uses: actions/checkout@v4
         with:
-        # Repository name with owner. For example, actions/checkout
-        # Default: ${{ github.repository }}
-          repository: 'ShiftLeftSecurity/shiftleft-go-demo'
-          path: 'shiftleft-go-demo'      
+          repository: ${{ inputs.repo }}
+          path: ${{ inputs.path }}
       - name: Install SonarQube scanner        
         run: |
             SONAR_DIR=/opt/sonarscanner          
@@ -59,10 +57,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any        
         run: |
-          cd shiftleft-go-demo
+          cd ${{ inputs.working-directory }}
           go build                    
           sonar-scanner \
-          -Dsonar.projectKey=shiftleft-go-demo \
+          -Dsonar.projectKey=${{ inputs.app-name }} \
           -Dsonar.sources=. \
           -Dsonar.host.url=${{ secrets.SONARQUBE_CODESPACES_URL }} \
           -Dsonar.login=${{ secrets.GO_SONARQUBE_TOKEN }}
@@ -78,17 +76,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-        # Repository name with owner. For example, actions/checkout
-        # Default: ${{ github.repository }}
-          repository: 'ShiftLeftSecurity/shiftleft-go-demo'
-          path: 'shiftleft-go-demo'
+          repository: ${{ inputs.repo }}
+          path: ${{ inputs.path }}
       - name: Set up Snyk CLI to check for security issues
         uses: snyk/actions/setup@806182742461562b67788a64410098c9d9b96adb
               
       - name: Snyk Code test and report
         continue-on-error: true       
         run: |
-            cd shiftleft-go-demo
+            cd ${{ inputs.working-directory }}
             go build        
             snyk code test --sarif || true
             snyk code test --sarif  > snyk-code.sarif
@@ -98,7 +94,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         if: success() || failure()
         with:
-          sarif_file: shiftleft-go-demo/snyk-code.sarif  
+          sarif_file: ${{ inputs.working-directory }}/snyk-code.sarif  
 
   sast-scan:
     name: Sast-scan
@@ -112,16 +108,16 @@ jobs:
       - uses: actions/setup-go@v4 
       - uses: actions/checkout@v4
         with:        
-          repository: 'ShiftLeftSecurity/shiftleft-go-demo'
-          path: 'shiftleft-go-demo'
+          repository: ${{ inputs.repo }}
+          path: ${{ inputs.path }}
       - name: Install sast-scan
         run: |
           curl https://cdn.shiftleft.io/download/sl >/usr/local/bin/sl && chmod a+rx /usr/local/bin/sl
       - name: Perform Scan
         run: |
-          cd shiftleft-go-demo
+          cd ${{ inputs.working-directory }}
           go build        
-          sl analyze --app shiftleft-go-demo --go --wait
+          sl analyze --app ${{ inputs.app-name }} --go --wait
         env:
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}
       - name: Get SARIF

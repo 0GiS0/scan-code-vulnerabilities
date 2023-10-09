@@ -30,6 +30,10 @@ on:
         type: string
         required: false
         default: 'manifests'
+      csproj:
+        description: 'The csproj file to scan'
+        type: string
+        required: false        
 
 jobs:
   sonarqube:
@@ -108,6 +112,6 @@ jobs:
         run: |
           cd ${{ inputs.working-directory }}
           dotnet build
-          sl analyze --app ${{ inputs.app-name }} --csharp --wait netcoreWebapi.csproj
+          sl analyze --app ${{ inputs.app-name }} --csharp --wait ${{ inputs.csproj } }}
         env:
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SL_TOKEN }}

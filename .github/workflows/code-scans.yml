@@ -23,17 +23,28 @@ jobs:
       repo: 'ShiftLeftSecurity/shiftleft-csharp-demo'
       path: 'shiftleft-csharp-demo'
       working-directory: 'shiftleft-csharp-demo/netcoreWebapi'
+      csproj: 'netcoreWebapi.csproj'
     secrets:
       SL_TOKEN: ${{ secrets.SL_TOKEN }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       DOTNET_SONARQUBE_TOKEN: ${{ secrets.DOTNET_SONARQUBE_TOKEN }}
       SONARQUBE_CODESPACES_URL: ${{ secrets.SONARQUBE_CODESPACES_URL }}
-  # go:
-  #   needs: dotnet
-  #   permissions:
-  #     contents: read
-  #     security-events: write
-  #   uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-go-code.yaml@main
+  go:
+    needs: dotnet
+    permissions:
+      contents: read
+      security-events: write
+    uses: 0GiS0/scan-code-vulnerabilities/.github/workflows/scan-go-code.yaml@main
+    with:
+      app-name: 'shiftleft-go-demo'
+      repo: 'ShiftLeftSecurity/shiftleft-go-demo'
+      path: 'shiftleft-go-demo'
+      working-directory: 'shiftleft-go-demo'
+    secrets:
+      SL_TOKEN: ${{ secrets.SL_TOKEN }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      GO_SONARQUBE_TOKEN: ${{ secrets.DOTNET_SONARQUBE_TOKEN }}
+      SONARQUBE_CODESPACES_URL: ${{ secrets.SONARQUBE_CODESPACES_URL }}
   # java:
   #   needs: go
   #   permissions:
